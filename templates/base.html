@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ org_name }}{% endblock %} · {{ org_name }}</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+{% if user %}
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><span class="logo">◈</span> {{ org_name }}</div>
+    <nav>
+      <a href="/" class="{{ 'on' if active=='overview' }}">▦ Overview</a>
+      <a href="/alerts" class="{{ 'on' if active=='alerts' }}">⚠ Alerts</a>
+      <a href="/hunt" class="{{ 'on' if active=='hunt' }}">⌕ Threat Hunt</a>
+      <a href="/rules" class="{{ 'on' if active=='rules' }}">⟡ Detection Rules</a>
+      <a href="/playbooks" class="{{ 'on' if active=='playbooks' }}">▷ Playbooks</a>
+      <a href="/intel" class="{{ 'on' if active=='intel' }}">◎ Threat Intel</a>
+      <a href="/cases" class="{{ 'on' if active=='cases' }}">▤ Cases</a>
+      {% if user.role == 'admin' %}
+      <a href="/admin" class="{{ 'on' if active=='admin' }}">⚙ Admin</a>
+      {% endif %}
+    </nav>
+    <div class="side-foot">
+      <div class="who"><span class="avatar">{{ user.username[0]|upper }}</span>
+        <div><b>{{ user.username }}</b><small>{{ user.role }} · {{ user.team }}</small></div>
+      </div>
+      <a class="logout" href="/logout">Sign out</a>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <div class="crumbs">{% block crumbs %}{% endblock %}</div>
+      <div class="status"><span class="dot live"></span> Live · feeds nominal</div>
+    </header>
+    <div class="content">{% block content %}{% endblock %}</div>
+  </main>
+</div>
+{% else %}
+<div class="auth-shell">{% block auth %}{% endblock %}</div>
+{% endif %}
+</body>
+</html>

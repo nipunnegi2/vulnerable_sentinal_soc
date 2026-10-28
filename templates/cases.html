@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% set active = 'cases' %}
+{% block title %}Cases{% endblock %}
+{% block crumbs %}<h1>Investigations</h1>{% endblock %}
+{% block content %}
+<div class="case-grid">
+  {% for c in cases %}
+  <a class="panel case" href="/cases/{{ c.id }}">
+    <div class="dhead">
+      <span class="pill" style="background:{{ sev_colors[c.severity] }}22;color:{{ sev_colors[c.severity] }}">{{ c.severity }}</span>
+      <span class="tag {{ c.status }}">{{ c.status }}</span>
+    </div>
+    <h3>{{ c.title }}</h3>
+    <p class="muted">{{ c.summary }}</p>
+    <small class="mono">#{{ c.id }} · owner {{ c.owner }}</small>
+  </a>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% set active = 'intel' %}
+{% block title %}Threat Intel{% endblock %}
+{% block crumbs %}<h1>Threat Intel Enrichment</h1>{% endblock %}
+{% block content %}
+<p class="muted">Enrich an indicator (IP, domain or hash) against the configured intelligence feed.</p>
+<form class="searchbar" method="get" action="/intel">
+  <input name="ioc" value="{{ ioc }}" placeholder="185.220.101.5  ·  evil-c2.example  ·  44d88612…" autofocus>
+  <button>Enrich</button>
+</form>
+{% if result %}
+<div class="panel">
+  <div class="phead">Enrichment result <small>{{ ioc }}</small></div>
+  <pre class="raw">{{ result }}</pre>
+</div>
+{% endif %}
+{% endblock %}

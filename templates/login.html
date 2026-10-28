@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Sign in{% endblock %}
+{% block auth %}
+<div class="auth-card">
+  <div class="auth-brand"><span class="logo">◈</span> SentinelSOC</div>
+  <p class="auth-sub">Security Operations Console</p>
+  {% if error %}<div class="err">{{ error }}</div>{% endif %}
+  <form method="post" action="/login{% if next %}?next={{ next }}{% endif %}">
+    <label>Username<input name="username" autofocus></label>
+    <label>Password<input name="password" type="password"></label>
+    <label class="row"><input type="checkbox" name="remember"> Keep me signed in</label>
+    <button class="btn full">Sign in</button>
+  </form>
+  <p class="auth-foot">No account? <a href="/register">Request analyst access</a></p>
+  <p class="auth-demo">Demo: <code>jdoe</code> / <code>spring-2024</code></p>
+</div>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% set active = 'rules' %}
+{% block title %}Detection Rules{% endblock %}
+{% block crumbs %}<h1>Detection Rules</h1>{% endblock %}
+{% block content %}
+<p class="muted">Rules fire when their condition expression evaluates true against an event. Use the tester to dry-run a condition.</p>
+<div class="panel">
+<table class="tbl">
+  <tr><th>#</th><th>Name</th><th>Severity</th><th>Condition</th><th>Playbook</th><th></th></tr>
+  {% for r in rules %}
+  <tr>
+    <td class="mono">{{ r.id }}</td><td>{{ r.name }}</td>
+    <td><span class="pill" style="background:{{ sev_colors[r.severity] }}22;color:{{ sev_colors[r.severity] }}">{{ r.severity }}</span></td>
+    <td class="mono small">{{ r.condition }}</td>
+    <td class="mono">#{{ r.playbook_id }}</td>
+    <td>{% if r.enabled %}<span class="tag ack">enabled</span>{% else %}<span class="tag">off</span>{% endif %}</td>
+  </tr>
+  {% endfor %}
+</table>
+</div>
+
+<div class="panel">
+  <div class="phead">Condition tester</div>
+  <div class="tester">
+    <input id="cond" placeholder="fails > 10" value="fails > 10">
+    <button class="btn" onclick="testRule()">Evaluate</button>
+    <span id="res" class="mono"></span>
+  </div>
+  <small class="muted">Sample event: fails=3, bytes=1200, proc=cmd.exe, parent=explorer.exe, sev_weight=2</small>
+</div>
+<script>
+async function testRule(){
+  const c = document.getElementById('cond').value;
+  const r = await fetch('/api/rules/test', {method:'POST',
+     headers:{'Content-Type':'application/json'}, body: JSON.stringify({condition:c})});
+  const j = await r.json();
+  document.getElementById('res').textContent = j.error ? ('error: '+j.error) : ('matched = '+j.matched);
+}
+</script>
+{% endblock %}

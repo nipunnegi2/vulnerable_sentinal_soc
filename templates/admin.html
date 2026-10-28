@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% set active = 'admin' %}
+{% block title %}Admin{% endblock %}
+{% block crumbs %}<h1>Administration</h1>{% endblock %}
+{% block content %}
+<div class="panel">
+  <div class="phead">Analysts</div>
+  <table class="tbl">
+    <tr><th>ID</th><th>Username</th><th>Name</th><th>Email</th><th>Role</th><th>Team</th><th>API token</th></tr>
+    {% for a in analysts %}
+    <tr>
+      <td class="mono">{{ a.id }}</td><td>{{ a.username }}</td><td>{{ a.full_name }}</td>
+      <td class="mono small">{{ a.email }}</td>
+      <td>{% if a.role=='admin' %}<span class="tag crit">admin</span>{% else %}{{ a.role }}{% endif %}</td>
+      <td>{{ a.team }}</td><td class="mono small">{{ a.api_token }}</td>
+    </tr>
+    {% endfor %}
+  </table>
+</div>
+
+<div class="panel">
+  <div class="phead">Integration settings</div>
+  <table class="tbl">
+    {% for k, v in settings.items() %}
+    <tr><td class="mono">{{ k }}</td><td class="mono small">{{ v }}</td></tr>
+    {% endfor %}
+  </table>
+</div>
+
+<div class="panel">
+  <div class="phead">Export evidence bundle</div>
+  <form class="searchbar" method="get" action="/admin/backup">
+    <input name="name" value="soc-export" placeholder="bundle name">
+    <button>Create bundle</button>
+  </form>
+  {% if backup_output %}<pre class="raw out">{{ backup_output }}</pre>{% endif %}
+</div>
+{% endblock %}

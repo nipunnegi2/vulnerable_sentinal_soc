@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% set active = 'overview' %}
+{% block title %}Overview{% endblock %}
+{% block crumbs %}<h1>Operations Overview</h1>{% endblock %}
+{% block content %}
+
+<div class="banner">◈ {{ banner_html|safe }}</div>
+
+<section class="kpis">
+  <div class="kpi crit"><span class="n">{{ sev_counts.critical }}</span><span class="l">Critical</span></div>
+  <div class="kpi high"><span class="n">{{ sev_counts.high }}</span><span class="l">High</span></div>
+  <div class="kpi med"><span class="n">{{ sev_counts.medium }}</span><span class="l">Medium</span></div>
+  <div class="kpi low"><span class="n">{{ sev_counts.low }}</span><span class="l">Low</span></div>
+  <div class="kpi"><span class="n">{{ open_cases|length }}</span><span class="l">Open cases</span></div>
+</section>
+
+<section class="grid3">
+  <div class="panel">
+    <div class="phead">Alerts by severity</div>
+    <div class="donut-wrap">{{ donut|safe }}
+      <ul class="legend">
+        {% for s in ['critical','high','medium','low','info'] %}
+        <li><span class="sw" style="background:{{ sev_colors[s] }}"></span>{{ s }}<b>{{ sev_counts[s] }}</b></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </div>
+  <div class="panel">
+    <div class="phead">Event volume <small>{{ spark_sum }} events · 24h</small></div>
+    {{ spark|safe }}
+    <div class="phead" style="margin-top:14px">Top source IPs</div>
+    {{ sources_svg|safe }}
+  </div>
+  <div class="panel">
+    <div class="phead">Top ATT&CK techniques</div>
+    {{ tech_svg|safe }}
+    <div class="phead" style="margin-top:14px">Queue</div>
+    <div class="qrow"><span>New</span><b>{{ status_counts.get('new',0) }}</b></div>
+    <div class="qrow"><span>Acknowledged</span><b>{{ status_counts.get('ack',0) }}</b></div>
+    <div class="qrow"><span>Closed</span><b>{{ status_counts.get('closed',0) }}</b></div>
+  </div>
+</section>
+
+<section class="grid2">
+  <div class="panel">
+    <div class="phead">Recent alerts <a class="more" href="/alerts">view all →</a></div>
+    <table class="tbl">
+      <tr><th>Sev</th><th>Time</th><th>Title</th><th>Source</th><th>Host</th></tr>
+      {% for a in recent %}
+      <tr onclick="location='/alerts/{{ a.id }}'">
+        <td><span class="pill" style="background:{{ sev_colors[a.severity] }}22;color:{{ sev_colors[a.severity] }}">{{ a.severity }}</span></td>
+        <td class="mono">{{ a.ts }}</td><td>{{ a.title }}</td>
+        <td class="mono">{{ a.source_ip }}</td><td class="mono">{{ a.host }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+  <div class="panel">
+    <div class="phead">Open cases <a class="more" href="/cases">view all →</a></div>
+    {% for c in open_cases %}
+    <a class="caserow" href="/cases/{{ c.id }}">
+      <span class="pill" style="background:{{ sev_colors[c.severity] }}22;color:{{ sev_colors[c.severity] }}">{{ c.severity }}</span>
+      <div><b>{{ c.title }}</b><small>#{{ c.id }} · {{ c.owner }} · {{ c.status }}</small></div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

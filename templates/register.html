@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Request access{% endblock %}
+{% block auth %}
+<div class="auth-card">
+  <div class="auth-brand"><span class="logo">◈</span> SentinelSOC</div>
+  <p class="auth-sub">Request analyst access</p>
+  {% if error %}<div class="err">{{ error }}</div>{% endif %}
+  <form method="post" action="/register">
+    <label>Username<input name="username" autofocus></label>
+    <label>Full name<input name="full_name"></label>
+    <label>Email<input name="email" type="email"></label>
+    <label>Password<input name="password" type="password"></label>
+    <button class="btn full">Create account</button>
+  </form>
+  <p class="auth-foot">Already have access? <a href="/login">Sign in</a></p>
+</div>
+{% endblock %}

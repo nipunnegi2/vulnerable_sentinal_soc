@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% set active = 'playbooks' %}
+{% block title %}Playbooks{% endblock %}
+{% block crumbs %}<h1>Automation Playbooks</h1>{% endblock %}
+{% block content %}
+<p class="muted">Playbooks run response actions on the SOC automation host. Parameters fill the action template at run time.</p>
+{% if output %}<pre class="raw out">{{ output }}</pre>{% endif %}
+<div class="pb-grid">
+  {% for p in playbooks %}
+  <div class="panel pb">
+    <div class="phead">▷ {{ p.name }} {% if p.enabled %}<span class="tag ack">enabled</span>{% endif %}</div>
+    <p class="muted">{{ p.description }}</p>
+    <pre class="raw small">{{ p.command }}</pre>
+    <form class="pb-run" method="get" action="/playbooks/{{ p.id }}/run">
+      <input name="indicator" placeholder="indicator / IP" value="127.0.0.1">
+      <input name="host" placeholder="host" value="WIN-APP03">
+      <button class="btn">Run</button>
+    </form>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

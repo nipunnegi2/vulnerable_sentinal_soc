@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% set active = 'cases' %}
+{% block title %}Case #{{ c.id }}{% endblock %}
+{% block crumbs %}<h1><a href="/cases" class="back">Cases</a> / #{{ c.id }}</h1>{% endblock %}
+{% block content %}
+<div class="panel detail">
+  <div class="dhead">
+    <span class="pill lg" style="background:{{ sev_colors[c.severity] }}22;color:{{ sev_colors[c.severity] }}">{{ c.severity }}</span>
+    <h2>{{ c.title }}</h2>
+    <span class="tag {{ c.status }}">{{ c.status }}</span>
+  </div>
+  <p class="muted">Owner {{ c.owner }} · case #{{ c.id }}</p>
+  <p>{{ c.summary }}</p>
+</div>
+
+<div class="panel">
+  <div class="phead">Investigation notes</div>
+  <div class="notes">{{ notes_html|safe }}</div>
+  <form class="noteform" method="post">
+    <textarea name="body" rows="2" placeholder="Add an investigation note…"></textarea>
+    <button class="btn">Add note</button>
+  </form>
+</div>
+{% endblock %}

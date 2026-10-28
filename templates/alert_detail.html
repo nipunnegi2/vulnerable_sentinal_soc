@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% set active = 'alerts' %}
+{% block title %}Alert #{{ a.id }}{% endblock %}
+{% block crumbs %}<h1><a href="/alerts" class="back">Alerts</a> / #{{ a.id }}</h1>{% endblock %}
+{% block content %}
+<div class="panel detail">
+  <div class="dhead">
+    <span class="pill lg" style="background:{{ sev_colors[a.severity] }}22;color:{{ sev_colors[a.severity] }}">{{ a.severity }}</span>
+    <h2>{{ a.title }}</h2>
+    <span class="tag {{ a.status }}">{{ a.status }}</span>
+  </div>
+  <div class="kv">
+    <div><small>Detected</small>{{ a.ts }}</div>
+    <div><small>Technique</small>{{ a.technique }}</div>
+    <div><small>Source IP</small><span class="mono">{{ a.source_ip }}</span></div>
+    <div><small>Dest IP</small><span class="mono">{{ a.dest_ip }}</span></div>
+    <div><small>Host</small><span class="mono">{{ a.host }}</span></div>
+    <div><small>Assignee</small>{{ a.assignee or '—' }}</div>
+  </div>
+  <div class="phead">Raw event</div>
+  <pre class="raw">{{ a.raw }}</pre>
+  <div class="actions">
+    <a class="btn" href="/playbooks">▷ Run playbook</a>
+    <a class="btn ghost" href="/intel?ioc={{ a.dest_ip }}">◎ Enrich {{ a.dest_ip }}</a>
+  </div>
+</div>
+{% endblock %}

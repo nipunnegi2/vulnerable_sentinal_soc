@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% set active = 'hunt' %}
+{% block title %}Threat Hunt{% endblock %}
+{% block crumbs %}<h1>Threat Hunt</h1>{% endblock %}
+{% block content %}
+<form class="searchbar hunt" method="get" action="/hunt">
+  <input name="q" value="{{ q_raw }}" placeholder="Search raw logs — e.g. powershell, dst=185.220, result=fail" autofocus>
+  <button>Run query</button>
+</form>
+<p class="muted">Query language matches against the raw message field across all sources.</p>
+{% if error %}<div class="err">query error: {{ error }}</div>{% endif %}
+<div class="panel">
+<table class="tbl logs">
+  <tr><th>Time</th><th>Host</th><th>Source</th><th>Sev</th><th>Message</th></tr>
+  {% for e in events %}
+  <tr>
+    <td class="mono small">{{ e.ts }}</td><td class="mono">{{ e.host }}</td>
+    <td><span class="src">{{ e.source }}</span></td>
+    <td><span class="dotm" style="background:{{ sev_colors[e.severity] }}"></span></td>
+    <td class="mono msg">{{ e.message }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% if not events %}<p class="muted pad">No events matched.</p>{% endif %}
+</div>
+{% endblock %}

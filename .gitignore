@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+data/
+evidence/
+integrations/*.py
+!integrations/__init__.py
+*.db
+.DS_Store

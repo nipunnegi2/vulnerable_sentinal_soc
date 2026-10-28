@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% set active = 'alerts' %}
+{% block title %}Alerts{% endblock %}
+{% block crumbs %}<h1>Alerts</h1>{% endblock %}
+{% block content %}
+<form class="searchbar" method="get" action="/alerts">
+  <input name="q" value="{{ q_raw }}" placeholder="Search title or source IP…" autofocus>
+  <select name="severity">
+    <option value="">all severities</option>
+    {% for s in ['critical','high','medium','low','info'] %}
+    <option value="{{ s }}" {{ 'selected' if sev==s }}>{{ s }}</option>
+    {% endfor %}
+  </select>
+  <button>Search</button>
+</form>
+{% if q_raw %}<p class="muted">Results for <b>{{ q_raw|safe }}</b></p>{% endif %}
+{% if error %}<div class="err">query error: {{ error }}</div>{% endif %}
+<div class="panel">
+<table class="tbl">
+  <tr><th>Sev</th><th>Time</th><th>Title</th><th>Source → Dest</th><th>Host</th><th>Technique</th><th>Status</th></tr>
+  {% for a in alerts %}
+  <tr onclick="location='/alerts/{{ a.id }}'">
+    <td><span class="pill" style="background:{{ sev_colors[a.severity] }}22;color:{{ sev_colors[a.severity] }}">{{ a.severity }}</span></td>
+    <td class="mono">{{ a.ts }}</td><td>{{ a.title }}</td>
+    <td class="mono">{{ a.source_ip }} → {{ a.dest_ip }}</td>
+    <td class="mono">{{ a.host }}</td><td class="mono small">{{ a.technique }}</td>
+    <td><span class="tag {{ a.status }}">{{ a.status }}</span></td>
+  </tr>
+  {% endfor %}
+</table>
+{% if not alerts %}<p class="muted pad">No matching alerts.</p>{% endif %}
+</div>
+{% endblock %}

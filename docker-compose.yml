@@ -1,0 +1,8 @@
+# SentinelSOC — intentionally vulnerable SOC/SIEM console.
+#   docker compose up --build   ->   http://localhost:8084
+services:
+  sentinelsoc:
+    build: .
+    container_name: sentinelsoc
+    ports:
+      - "8084:5004"
